@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     Text roundPopupText;
     Shooter shoot;
 
+
     // Use this for initialization
     void Start ()
 	{
@@ -49,13 +50,24 @@ public class GameManager : MonoBehaviour
 
     public void DisplayRoundNumOn()
     {
-        roundPopupText.text = "ROUND\n" + StaticVars.roundNum;
+        roundPopupText.text = "ROUND\n" + StaticVars.instance.roundNum;
         roundPopup.SetActive(true);
     }
 
     public void DisplayRoundNumOff()
     {
-        roundPopupText.text = "ROUND\n" + StaticVars.roundNum;
+        roundPopupText.text = "ROUND\n" + StaticVars.instance.roundNum;
         roundPopup.SetActive(false);
+    }
+
+    public void OnDisable()
+    {
+        GameManager.OnDuckMiss -= FlyAwaySkyOn;
+        GameManager.OnDuckFlyAway -= FlyAwaySkyOff;
+        GameManager.OnSpawnDucks -= FlyAwaySkyOff;
+        GameManager.OnNewRound -= FlyAwaySkyOff;
+        GameManager.OnStartGame -= DisplayRoundNumOn;
+        GameManager.OnNewRound -= DisplayRoundNumOn;
+        GameManager.OnSpawnDucks -= DisplayRoundNumOff;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class DuckMovement : MonoBehaviour
 {
+    [SerializeField]
     private float speed = .1f;
     public Vector3 direction;
 
@@ -15,9 +16,12 @@ public class DuckMovement : MonoBehaviour
     SpriteRenderer duckSprite;
 
     Animator anim;
+    private Collider _collider;
 
     void Start()
+
     {
+        _collider = GetComponent<Collider>();
         anim = GetComponent<Animator>();
         duckSprite = GetComponent<SpriteRenderer>();
         GameObject shooter = GameObject.Find("Main Camera");
@@ -52,7 +56,8 @@ public class DuckMovement : MonoBehaviour
         if (!paused)
         {
             Time.timeScale = 1;
-            transform.position = transform.position + (direction * (speed + StaticVars.roundNum / 10));
+            transform.position = transform.position + (direction * (speed + StaticVars.instance.roundNum / 10));
+            //Debug.Log(speed + StaticVars.instance.roundNum / 10);
         }
 
     }
@@ -97,16 +102,26 @@ public class DuckMovement : MonoBehaviour
     public void StopMovement()
     {
         direction = new Vector3(0, 0, 0);
+        _collider.isTrigger = true;
+
     }
 
     public void StartFall()
     {
         direction = new Vector3(0, -1, 0);
+        _collider.isTrigger = true;
     }
 
     public void FlyAway()
     {
         direction = new Vector3(0, 1, 0);
+        _collider.isTrigger = true;
     }
 
+
+    public void OnDisable()
+    {
+        GameManager.OnDuckShot -= StopMovement;
+        GameManager.OnDuckMiss -= FlyAway;
+    }
 }

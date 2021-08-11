@@ -15,15 +15,15 @@ public class PauseGame : MonoBehaviour
 	{
 		if (Input.GetKeyUp (KeyCode.P))
 		{
-			StaticVars.paused = !StaticVars.paused;
+			StaticVars.instance.paused = !StaticVars.instance.paused;
 
-			if (StaticVars.paused)
+			if (StaticVars.instance.paused)
 			{
 				source.PlayOneShot (pauseSound);
 				pausedPopup.SetActive (true);
 				pausedText.SetActive (true);
 			}
-			else if (!StaticVars.paused)
+			else if (!StaticVars.instance.paused)
 			{
 				pausedPopup.SetActive (false);
 				pausedText.SetActive (false);
@@ -32,24 +32,24 @@ public class PauseGame : MonoBehaviour
 
 		if (Input.GetKeyUp (KeyCode.Escape))
 		{
-			StaticVars.paused = !StaticVars.paused;
+			StaticVars.instance.paused = !StaticVars.instance.paused;
 			
-			if (StaticVars.paused)
+			if (StaticVars.instance.paused)
 			{
 				source.PlayOneShot (pauseSound);
 				pausedPopup.SetActive (true);
 				pausedText.SetActive (true);
 			}
-			else if (!StaticVars.paused)
+			else if (!StaticVars.instance.paused)
 				Application.Quit ();
 		}
 
-		if (StaticVars.paused) 
+		if (StaticVars.instance.paused) 
 		{
 			Time.timeScale = 0;
 		}
 
-		else if (!StaticVars.paused)
+		else if (!StaticVars.instance.paused)
 		{
 			Time.timeScale = 1;
 		}

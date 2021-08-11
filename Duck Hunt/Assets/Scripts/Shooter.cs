@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class Shooter : MonoBehaviour
 {
@@ -25,26 +26,31 @@ public class Shooter : MonoBehaviour
     private Text roundText;
     public GameObject roundObject;
 
+    [SerializeField]
     private int bulletAmount;
     public int maxBullets;
 
     public GameObject[] redDuck;
 
 	public GameObject whiteDucks;
-	Animator anim;
+	public Animator anim;
 
     private int duckShotNum;
+
+    public GameObject[] directionChanger;
+
+    private int _counter;
 
     // Use this for initialization
     void Start()
     {
-		anim = whiteDucks.GetComponent<Animator> ();
+		anim = whiteDucks.GetComponent<Animator>();
 
         scoreTxt = scoreObject.GetComponent<Text>();
         roundText = roundObject.GetComponent<Text>();
-        StaticVars.duckNum = 1;
+        StaticVars.instance.duckNum = 1;
         duckShotNum = 0;
-        StaticVars.roundNum = 1;
+        StaticVars.instance.roundNum = 1;
 
         maxBullets = 3;
         bulletAmount = 50;
@@ -63,7 +69,7 @@ public class Shooter : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (StaticVars.noClick == false)
+            if (StaticVars.instance.noClick == false)
             {
                 bulletAmount--;
                 BulletGUI(bulletAmount);
@@ -71,14 +77,15 @@ public class Shooter : MonoBehaviour
                 if (bulletAmount < 0)
                 {
                     bulletAmount = 20;
-                    StaticVars.roundNum++;
-                    StaticVars.noClick = true;
+                    StaticVars.instance.roundNum++;
+                    StaticVars.instance.noClick = true;
+                    SetScore(0);
                     GameManager.OnDuckMiss();
                 }
 
                 if (0 <= bulletAmount && bulletAmount <= 3)
                 {
-                    float vol = Random.Range(volMin, volMax);
+                    float vol = UnityEngine.Random.Range(volMin, volMax);
                     source.PlayOneShot(shot, vol);
                 }
 
@@ -93,20 +100,23 @@ public class Shooter : MonoBehaviour
                     {
                         if (hit.transform.tag == "Duck")
                         {
-                            StaticVars.noClick = true;
+                            //StaticVars.instance.noClick = true;
                             DuckHealth health = hit.transform.GetComponent<DuckHealth>();
                             health.KillDuck();
-                            SetScore();
+                            SetScore(500);
                             duckShotNum++;
                             DuckGUIShot();
-							StaticVars.duckNum++;
-						}
+							StaticVars.instance.duckNum++;
+                            Debug.Log("Bullet amount zero if");
+                        }
                     }
                     else
                     {
-                        StaticVars.duckNum++;
-                        StaticVars.noClick = true;
+                        StaticVars.instance.duckNum++;
+                       // StaticVars.instance.noClick = true;
+                        SetScore(0);
                         GameManager.OnDuckMiss();
+                        Debug.Log("Bullet amount zero else");
                     }
                 }
                 else
@@ -120,13 +130,14 @@ public class Shooter : MonoBehaviour
                     {
                         if (hit.transform.tag == "Duck")
                         {
-                            StaticVars.noClick = true;
+                            //StaticVars.instance.noClick = true;
                             DuckHealth health = hit.transform.GetComponent<DuckHealth>();
                             health.KillDuck();
-                            SetScore();
-                            duckShotNum++;
-                            DuckGUIShot();
-							StaticVars.duckNum++;
+                            SetScore(500);
+                            //duckShotNum++;
+                           // DuckGUIShot();
+							//StaticVars.instance.duckNum++;
+                            Debug.Log("Actual Line" + _counter++);
 						}
                     }
                 }
@@ -135,10 +146,11 @@ public class Shooter : MonoBehaviour
     }
 
 
-    public void SetScore()
+    public void SetScore(int _score)
     {
-        score += 500;
+        score += _score;
         scoreTxt.text = score.ToString().PadLeft(6, '0');
+        ScoreManager.instance.SetHighScore(score);
     }
 
     public void ResetRound()
@@ -147,41 +159,49 @@ public class Shooter : MonoBehaviour
 		{
 			redDuck [i].SetActive (false);
 		}
-        StaticVars.duckNum = 1;
+        StaticVars.instance.duckNum = 1;
     }
 
     public void DuckGUIShot()
     {
-		redDuck [StaticVars.duckNum-1].SetActive (true);
+		redDuck [StaticVars.instance.duckNum-1].SetActive (true);
     }
 
 	public void DuckGUI()
 	{
-		print ("duckNum = " + StaticVars.duckNum);
-		switch (StaticVars.duckNum)
-		{
-		case 1:
-			anim.Play ("1"); break;
-		case 2:
-			anim.Play ("2"); break;
-		case 3:
-			anim.Play ("3"); break;
-		case 4:
-			anim.Play ("4"); break;
-		case 5:
-			anim.Play ("5"); break;
-		case 6:
-			anim.Play ("6"); break;
-		case 7:
-			anim.Play ("7"); break;
-		case 8:
-			anim.Play ("8"); break;
-		case 9:
-			anim.Play ("9"); break;
-		case 10:
-			anim.Play ("10"); break;
-		default:break;
-		}
+        try
+        {
+            print("duckNum = " + StaticVars.instance.duckNum);
+            switch (StaticVars.instance.duckNum)
+            {
+                case 1:
+                    anim.Play("1"); break;
+                case 2:
+                    anim.Play("2"); break;
+                case 3:
+                    anim.Play("3"); break;
+                case 4:
+                    anim.Play("4"); break;
+                case 5:
+                    anim.Play("5"); break;
+                case 6:
+                    anim.Play("6"); break;
+                case 7:
+                    anim.Play("7"); break;
+                case 8:
+                    anim.Play("8"); break;
+                case 9:
+                    anim.Play("9"); break;
+                case 10:
+                    anim.Play("10"); break;
+                default: break;
+            }
+        }
+        catch(Exception e)
+        {
+
+        }
+		
 	}
 
 	public void DuckGUIStop()
@@ -191,10 +211,18 @@ public class Shooter : MonoBehaviour
 		
 		public void ResetBullets()
 		{
-			bulletAmount = maxBullets;
-			bullet3.SetActive(true);
-			bullet2.SetActive(true);
-			bullet1.SetActive(true);
+        try
+        {
+            bulletAmount = maxBullets;
+            bullet3.SetActive(true);
+            bullet2.SetActive(true);
+            bullet1.SetActive(true);
+        }
+        catch
+        {
+            Debug.Log("Bullet 3 Destroy Error");
+        }
+			
 		}
 		
 		public void BulletGUI(int bullets)
@@ -223,14 +251,14 @@ public class Shooter : MonoBehaviour
         if (duckShotNum > 6)
         {
             source.PlayOneShot(win, 1);
-            StaticVars.roundNum++;
-            roundText.text = "R = " + StaticVars.roundNum.ToString();
+            StaticVars.instance.roundNum++;
+            roundText.text = "R = " + StaticVars.instance.roundNum.ToString();
         }
         else
         {
 //            source.PlayOneShot(lose, 1);
-//            StaticVars.roundNum = 1;
-//            roundText.text = "R = " + StaticVars.roundNum.ToString();
+//            StaticVars.instance.roundNum = 1;
+//            roundText.text = "R = " + StaticVars.instance.roundNum.ToString();
 //			score = 0;
 //			scoreTxt.text = score.ToString().PadLeft(6, '0');
 			Application.LoadLevel("GameOver");
@@ -240,6 +268,20 @@ public class Shooter : MonoBehaviour
 
     public void ClickOn()
     {
-        StaticVars.noClick = false;
+        StaticVars.instance.noClick = false;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnSpawnDucks -= ResetBullets;
+        GameManager.OnSpawnDucks -= ClickOn;
+        GameManager.OnSpawnDucks -= DuckGUI;
+        GameManager.OnDuckMiss -= DuckGUIStop;
+        GameManager.OnDuckShot -= DuckGUIStop;
+        GameManager.OnNewRound -= ResetRound;
+        GameManager.OnNewRound -= ResetBullets;
+        GameManager.OnNewRound -= RoundNum;
+
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class DogControl : MonoBehaviour
 {
@@ -20,6 +21,11 @@ public class DogControl : MonoBehaviour
 //        GameManager.OnStartGame += PlayIntro;
         GameManager.OnNewRound += PlayNewRound;
 	}
+
+    public void GameOver()
+    {
+        SceneManager.LoadScene("GameOver");
+    }
 	
 	public void SpawnDucks()
 	{
@@ -52,5 +58,13 @@ public class DogControl : MonoBehaviour
     public void PlayNewRound()
     {
         anim.Play("dog walking");
+    }
+
+    public void OnDisable()
+    {
+        GameManager.OnDuckDeath -= PlayPopup;
+        GameManager.OnDuckFlyAway -= PlayLaugh;
+        //        GameManager.OnStartGame += PlayIntro;
+        GameManager.OnNewRound -= PlayNewRound;
     }
 }

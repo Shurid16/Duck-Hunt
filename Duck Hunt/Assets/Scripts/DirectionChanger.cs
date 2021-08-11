@@ -8,14 +8,19 @@ public class DirectionChanger: MonoBehaviour
 
 	void Start ()
 	{
-		GameManager.OnDuckShot += TurnOff;
-		GameManager.OnDuckMiss += TurnOff;
-		GameManager.OnSpawnDucks += TurnOn;
+		
 	}
-	
-	//void Update () {}
 
-	public void OnCollisionEnter(Collision hit)
+    private void OnEnable()
+    {
+        //GameManager.OnDuckShot += TurnOff;
+       // GameManager.OnDuckMiss += TurnOff;
+       // GameManager.OnSpawnDucks += TurnOn;
+    }
+
+    //void Update () {}
+
+    public void OnCollisionEnter(Collision hit)
 	{
 		if (hit.transform.tag == "Duck")
 		{
@@ -41,4 +46,11 @@ public class DirectionChanger: MonoBehaviour
 	{
 		gameObject.SetActive (true);
 	}
+
+    public void Unregister()
+    {
+      //  GameManager.OnDuckShot -= TurnOff;
+       // GameManager.OnDuckMiss -= TurnOff;
+       // GameManager.OnSpawnDucks -= TurnOn;
+    }
 }

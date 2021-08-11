@@ -3,10 +3,27 @@ using System.Collections;
 
 public class StaticVars : MonoBehaviour
 {
-	public static bool noClick;
-	public static int roundNum;
-	public static int duckNum;
-	public static bool paused = false;
+
+    public static StaticVars instance;
+
+
+    private void Awake()
+    {
+        if(instance!=null)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+      
+    }
+
+    public bool noClick;
+	public int roundNum;
+	public int duckNum;
+    public bool paused;
 
 
 }

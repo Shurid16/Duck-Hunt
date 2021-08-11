@@ -25,5 +25,12 @@ public class DuckSpawn : MonoBehaviour
 	{
 		int randomSpawnPointNum = Random.Range (0, spawnPoints.Count-1);
 		Instantiate(duck, spawnPoints[randomSpawnPointNum].position, Quaternion.identity);
-	}
+        int randomSpawnPointNum2 = Random.Range(0, spawnPoints.Count - 1);
+        Instantiate(duck, spawnPoints[randomSpawnPointNum2].position, Quaternion.identity);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnSpawnDucks -= SpawnDuck;
+    }
 }
