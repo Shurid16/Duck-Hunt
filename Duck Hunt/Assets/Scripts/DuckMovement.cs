@@ -18,6 +18,9 @@ public class DuckMovement : MonoBehaviour
     Animator anim;
     private Collider _collider;
 
+    public bool clicked;
+    private bool isDead;
+
     void Start()
 
     {
@@ -101,6 +104,7 @@ public class DuckMovement : MonoBehaviour
 
     public void StopMovement()
     {
+        if(clicked)
         direction = new Vector3(0, 0, 0);
         _collider.isTrigger = true;
 
@@ -114,6 +118,7 @@ public class DuckMovement : MonoBehaviour
 
     public void FlyAway()
     {
+        if(!clicked)
         direction = new Vector3(0, 1, 0);
         _collider.isTrigger = true;
     }

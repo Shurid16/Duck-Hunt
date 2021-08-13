@@ -7,6 +7,7 @@ public class DuckHealth : MonoBehaviour
     public bool isInvincible;
     private GameObject shoot;
     Shooter shooter;
+    public bool isClicked = false;
 
     void Start()
     {
@@ -16,7 +17,7 @@ public class DuckHealth : MonoBehaviour
         isInvincible = false;
         anim = gameObject.GetComponent<Animator>();
         GameManager.OnDuckMiss += MakeInvincible;
-        GameManager.OnDuckShot += MakeInvincible;
+      //  GameManager.OnDuckShot += MakeInvincible;
 
     }
 
@@ -28,20 +29,36 @@ public class DuckHealth : MonoBehaviour
         {
             if (StaticVars.instance.duckNum > 10)
             {
-                GameManager.OnNewRound();
+                if(GameManagerNew.instance.totalBirds<=0 && !GameManagerNew.instance.newRoundCalledOnce)
+                {
+                    Debug.Log("Bird reached kill zone");
+                    GameManagerNew.instance.newRoundCalledOnce = true;
+                    GameManager.OnNewRound();
+                }
+             
                 Destroy(this.gameObject);
             }
             else
             {
-                GameManager.OnDuckDeath();
+                if (GameManagerNew.instance.totalBirds <= 0)
+                {
+                    GameManager.OnDuckDeath();
+                    Debug.Log("It was called");
+                }
+               
                 Destroy(this.gameObject);
             }
         }
-        if (hit.tag == "FlyAwayZone")
+        else if (hit.tag == "FlyAwayZone")
         {
             if (StaticVars.instance.duckNum > 10)
             {
-                GameManager.OnNewRound();
+                if (GameManagerNew.instance.totalBirds <= 0 && !GameManagerNew.instance.newRoundCalledOnce)
+                {
+                    Debug.Log("Bird reached fly away zone");
+                    GameManagerNew.instance.newRoundCalledOnce = true;
+                    GameManager.OnNewRound();
+                }
                 Destroy(this.gameObject);
             }
             else
@@ -55,10 +72,12 @@ public class DuckHealth : MonoBehaviour
 
     public void KillDuck()
     {
-        if (isInvincible == false)
+        if (isInvincible == false && isClicked)
         {
-            GameManager.OnDuckShot();
+            //GameManager.OnDuckShot();
+            MakeInvincible();
             anim.Play("duck death");
+            Debug.Log(this.transform.gameObject.name);
 
         }
     }
@@ -71,6 +90,6 @@ public class DuckHealth : MonoBehaviour
     public void OnDisable()
     {
         GameManager.OnDuckMiss -= MakeInvincible;
-        GameManager.OnDuckShot -= MakeInvincible;
+       // GameManager.OnDuckShot -= MakeInvincible;
     }
 }

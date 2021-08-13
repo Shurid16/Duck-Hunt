@@ -12,7 +12,18 @@ public class DogControl : MonoBehaviour
 	public AudioClip gotDuck;
     public AudioClip intro;
 
-	void Start ()
+    public bool dogAnimPlaying;
+    public bool popDogClipPlayed;
+
+    public static DogControl instance;
+
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    void Start ()
 	{
 		source = GetComponent<AudioSource> ();
 		anim = GetComponent<Animator>();
@@ -29,7 +40,8 @@ public class DogControl : MonoBehaviour
 	
 	public void SpawnDucks()
 	{
-		GameManager.OnSpawnDucks();
+        GameManagerNew.instance.newRoundCalledOnce = false;
+        GameManager.OnSpawnDucks();
 	}
 
 	public void PlayLaugh()
@@ -51,13 +63,31 @@ public class DogControl : MonoBehaviour
 
     public void PlayPopup()
 	{
-		anim.Play ("dog popup");
-		source.PlayOneShot(gotDuck, 1);
-	}
+           Debug.Log("Round End");
+            if (!popDogClipPlayed)
+            {
+                anim.Play("dog popup");
+                if (!source.isPlaying)
+                {
+                    source.PlayOneShot(gotDuck, 1);
+                }
+                popDogClipPlayed = true;
+            }
+        
+        
+		
+    }
+		
 
     public void PlayNewRound()
     {
-        anim.Play("dog walking");
+        //if(!GameManagerNew.instance.newRoundCalledOnce)
+        if(true)
+        {
+            GameManagerNew.instance.newRoundCalledOnce = true;
+            anim.Play("dog walking");
+        }
+       
     }
 
     public void OnDisable()

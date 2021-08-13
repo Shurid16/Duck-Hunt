@@ -102,7 +102,12 @@ public class Shooter : MonoBehaviour
                         {
                             //StaticVars.instance.noClick = true;
                             DuckHealth health = hit.transform.GetComponent<DuckHealth>();
+                            health.isClicked = true;
+                            DuckMovement movement = hit.transform.GetComponent<DuckMovement>();
+                            movement.clicked = true;
+                            movement.StopMovement();
                             health.KillDuck();
+                            GameManagerNew.instance.OneBirdKilled();
                             SetScore(500);
                             duckShotNum++;
                             DuckGUIShot();
@@ -113,7 +118,7 @@ public class Shooter : MonoBehaviour
                     else
                     {
                         StaticVars.instance.duckNum++;
-                       // StaticVars.instance.noClick = true;
+                        StaticVars.instance.noClick = true;
                         SetScore(0);
                         GameManager.OnDuckMiss();
                         Debug.Log("Bullet amount zero else");
@@ -131,12 +136,19 @@ public class Shooter : MonoBehaviour
                         if (hit.transform.tag == "Duck")
                         {
                             //StaticVars.instance.noClick = true;
-                            DuckHealth health = hit.transform.GetComponent<DuckHealth>();
+                            DuckHealth health = hit.transform.GetComponent<DuckHealth>();                          
+                            health.isClicked = true;
+                           
+                            DuckMovement movement = hit.transform.GetComponent<DuckMovement>();
+                            movement.clicked = true;
+                            movement.StopMovement();
                             health.KillDuck();
+                            GameManagerNew.instance.OneBirdKilled();
+
                             SetScore(500);
-                            //duckShotNum++;
-                           // DuckGUIShot();
-							//StaticVars.instance.duckNum++;
+                            duckShotNum++;
+                            DuckGUIShot();
+							StaticVars.instance.duckNum++;
                             Debug.Log("Actual Line" + _counter++);
 						}
                     }

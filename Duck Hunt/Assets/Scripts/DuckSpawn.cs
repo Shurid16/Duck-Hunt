@@ -23,10 +23,15 @@ public class DuckSpawn : MonoBehaviour
 
 	public void SpawnDuck()
 	{
-		int randomSpawnPointNum = Random.Range (0, spawnPoints.Count-1);
-		Instantiate(duck, spawnPoints[randomSpawnPointNum].position, Quaternion.identity);
-        int randomSpawnPointNum2 = Random.Range(0, spawnPoints.Count - 1);
-        Instantiate(duck, spawnPoints[randomSpawnPointNum2].position, Quaternion.identity);
+        DogControl.instance.popDogClipPlayed = false;
+        
+        for (int i=0; i<GameManagerNew.instance.level;i++)
+        {
+            int randomSpawnPointNum = Random.Range(0, spawnPoints.Count - 1);
+            Instantiate(duck, spawnPoints[randomSpawnPointNum].position, Quaternion.identity);
+            GameManagerNew.instance.totalBirds++;
+        }
+		       
     }
 
     private void OnDisable()
