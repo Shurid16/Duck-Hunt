@@ -105,15 +105,16 @@ public class DuckMovement : MonoBehaviour
     public void StopMovement()
     {
         if(clicked)
-        direction = new Vector3(0, 0, 0);
+        direction = new Vector3(0, 1, 0);
         _collider.isTrigger = true;
 
     }
 
     public void StartFall()
     {
-        direction = new Vector3(0, -1, 0);
-        _collider.isTrigger = true;
+        //direction = new Vector3(0, 1, 0);
+        //_collider.isTrigger = true;
+        //FlyAway();
     }
 
     public void FlyAway()
